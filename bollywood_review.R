@@ -1,10 +1,13 @@
 
-#EDA
+#Knowing the data
 summary(bolly)
-str(bolly1)
+str(bolly)
 plot(bolly$Budget,bolly$BO_Collection)
 table(bolly$Box_Office_Verdict)
 
+#BO_Collection is in character so changeing it to numeric
+bolly$BO_Collection <- as.numeric(bolly$BO_Collection)
+str(bolly)
 #removing the names of movies coloum
 bolly1 <- bolly[,-1]
 bolly1$Box_Office_Verdict <- as.factor(bolly1$Box_Office_Verdict)
@@ -19,6 +22,7 @@ bolly1$Budget<- norm(bolly1$Budget)
 
 #dividing data into train and test
 size <- round(0.3 * 52)
+set.seed(1)
 split <- sample(nrow(bolly),size = size)
 length(split)
 train <- bolly1
@@ -44,7 +48,8 @@ pred <- predict(model,newdata = test)
 mean(test$Box_Office_Verdict == pred)#0.9375
 summary(model)
 
-#knn
+#Knn
+install.packages("class")
 library(class)
 #seperating our dependent variable from train and test
 colnames(bolly)
@@ -67,6 +72,6 @@ mean(final == l_test )
 
 #in the above SVM provide more better prediction of 93%
 
-#comparison using table
-table(pred,l_test)
-table(final,l_test)
+#comparison using crosstable
+library(gmodels)
+CrossTable(test$Box_Office_Verdict,pred)
